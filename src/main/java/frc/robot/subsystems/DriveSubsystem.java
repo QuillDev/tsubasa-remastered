@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -121,10 +120,15 @@ public class DriveSubsystem extends SubsystemBase {
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle())
                         : new ChassisSpeeds(xSpeed, ySpeed, rot));
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-        m_frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
-        m_backLeft.setDesiredState(swerveModuleStates[2]);
-        m_backRight.setDesiredState(swerveModuleStates[3]);
+
+        var flOptimized = SwerveModuleState.optimize(swerveModuleStates[0], m_frontLeft.getState().angle);
+        var frOptimized = SwerveModuleState.optimize(swerveModuleStates[1], m_frontRight.getState().angle);
+        var blOptimized = SwerveModuleState.optimize(swerveModuleStates[2], m_backLeft.getState().angle);
+        var brOptimized = SwerveModuleState.optimize(swerveModuleStates[3], m_backRight.getState().angle);
+        m_frontLeft.setDesiredState(flOptimized);
+        m_frontRight.setDesiredState(frOptimized);
+        m_backLeft.setDesiredState(blOptimized);
+        m_backRight.setDesiredState(brOptimized);
     }
 
     /**
