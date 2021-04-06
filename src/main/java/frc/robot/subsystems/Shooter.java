@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
      */
     public void shoot() {
         // set the shooter to max speedss
-        shooterPID.setReference(-5500, ControlType.kVelocity);
+        shooter.set(1);
         SmartDashboard.putNumber("Shooter RPM", encoder.getVelocity());
         // check if the shooter is up to RPM and if the target is in sight
         if (Math.abs(encoder.getVelocity()) >= 5700) {
