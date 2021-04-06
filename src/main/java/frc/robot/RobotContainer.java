@@ -46,7 +46,7 @@ public class RobotContainer {
     // Default command for the swerve subsystem, makes sure we drive when the driver
     // gives input
     DRIVE.setDefaultCommand(new RunCommand(
-        () -> DRIVE.drive(-pilotStick.getRawAxis(1), pilotStick.getRawAxis(0), -pilotStick.getRawAxis(4), true),
+        () -> DRIVE.drive(-pilotStick.getRawAxis(1), -pilotStick.getRawAxis(0), -pilotStick.getRawAxis(4), true),
         DRIVE));
     INTAKE.setDefaultCommand(new RunCommand(() -> INTAKE.drive(), INTAKE));
   }

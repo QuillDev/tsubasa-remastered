@@ -116,8 +116,7 @@ public class DriveSubsystem extends SubsystemBase {
         if (Math.abs(rot) < deadzone) {
             rot = 0;
         }
-
-        ySpeed *= -1;
+        
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle())
                         : new ChassisSpeeds(xSpeed, ySpeed, rot));

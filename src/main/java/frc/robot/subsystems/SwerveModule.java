@@ -32,6 +32,7 @@ public class SwerveModule {
   private final SensorCollection steerEncoder;
   private final boolean turningEncoderReversed;
   private final boolean turningMotorInverse;
+  private final boolean driveInverted;
 
   private final int kTimeoutMs = 10;
   
@@ -46,13 +47,14 @@ public class SwerveModule {
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, boolean driveEncoderReversed, boolean turningEncoderReversed,boolean inverseTurn, String name) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, boolean driveInverted, boolean turningEncoderReversed,boolean inverseTurn, String name) {
 
     drive = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     steer = new TalonSRX(turningMotorChannel);
 
     this.turningMotorInverse = inverseTurn;
 
+    this.driveInverted = driveInverted;
     this.turningEncoderReversed = turningEncoderReversed;
     this.name = name;
 
@@ -118,7 +120,7 @@ public class SwerveModule {
   private void setupDriveEncoder() {
     //clear any unwanted garbage off at startup
     drive.restoreFactoryDefaults();
-
+    drive.setInverted(driveInverted);
     //convert position encoder value to change from rotations to metres
     driveEncoder.setPositionConversionFactor( ((Math.PI * ModuleConstants.wheelDiameterMetres) / (ModuleConstants.driveEncoderCPR * 6.67) )) ;
 
@@ -170,7 +172,7 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState state) {
 
 
-    double velocity = state.speedMetersPerSecond * Constants.DriveConstants.speedLimit;
+    double velocity = state.speedMetersPerSecond / 2 * .5;
 
     //set the steer motor to the calculated degree using the PID Algorithm from CTRE
     steer.set(ControlMode.MotionMagic, state.angle.getDegrees() / 360 * 4096);
